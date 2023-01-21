@@ -1,5 +1,8 @@
 import Head from "next/head";
 import "@/styles/globals.css";
+import HeaderContainer from "@/containers/header";
+import PreLoader from "@/components/preloader";
+import GlobalProvider from "@/contexts/global-context";
 
 export default function App({ Component, pageProps }) {
   return (
@@ -28,7 +31,14 @@ export default function App({ Component, pageProps }) {
         <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
-      <Component {...pageProps} />
+      <GlobalProvider>
+        <PreLoader>
+          <HeaderContainer />
+          <main>
+            <Component {...pageProps} />
+          </main>
+        </PreLoader>
+      </GlobalProvider>
     </>
   );
 }
