@@ -37,11 +37,12 @@ function PreviewPaymentContainer() {
         value: ethers.utils.parseEther(amount),
       });
       setSuccess((prev) => true);
+      setLoading((prev) => false);
     } catch (error) {
       console.log(error);
       alert("Error: " + error.message);
+      setLoading((prev) => false);
     }
-    setLoading((prev) => false);
   };
 
   useEffect(() => {

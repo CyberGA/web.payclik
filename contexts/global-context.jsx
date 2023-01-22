@@ -12,6 +12,7 @@ import Web3Modal from "web3modal";
 import { initState, StoreReducer, StoreAction } from "@/hooks/store";
 import { useRouter } from "next/router";
 
+
 const GlobalContext = createContext();
 
 export default function GlobalProvider({ children }) {
@@ -46,6 +47,8 @@ export default function GlobalProvider({ children }) {
   };
 
   const connectWallet = async () => {
+    setLoading((prev) => true);
+
     try {
       // Get the provider from web3Modal, which in our case is MetaMask
       // When used for the first time, it prompts the user to connect their wallet
@@ -85,7 +88,7 @@ export default function GlobalProvider({ children }) {
       connectWallet();
     }
   }
-  
+
   const getUserBalance = async () => {
     setBalance((prev) => "");
     const signer = await getProviderOrSigner(true);
@@ -96,8 +99,14 @@ export default function GlobalProvider({ children }) {
   };
 
   useEffect(() => {
+    let isMounted = true;
     setLoading((prev) => true);
     refreshWallet();
+
+    return () => {
+      isMounted = false;
+      setLoading((prev) => false);
+    };
   }, [state.walletConnected, router.pathname]);
 
   const globalValues = useMemo(() => {

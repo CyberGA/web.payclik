@@ -39,6 +39,7 @@ export default function PreLoader({ children }) {
         loaderProps={{ size: "xl", color: "#6933D5", variant: "bars" }}
         overlayOpacity={0.8}
         overlayColor="#000"
+        zIndex="99999"
       />
       {children}
     </>

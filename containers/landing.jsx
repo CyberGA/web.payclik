@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 export default function LandingContainer() {
   const router = useRouter();
-  const { setLoading, getProviderOrSigner, state, dispatch } =
+  const { setLoading, state } =
     useGlobalContext();
 
   async function onContine() {
