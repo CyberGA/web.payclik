@@ -1,23 +1,26 @@
 import { Modal, TextInput } from "@mantine/core";
 import { SiEthereum } from "react-icons/si";
-import { HiShoppingCart } from "react-icons/hi";
 import QRCode from "react-qr-code";
 import { useGlobalContext } from "@/contexts/global-context";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useState } from "react";
-
 export default function RequestPayment() {
-  const { opened, setOpened } = useGlobalContext();
+  const { opened, setOpened, state } = useGlobalContext();
   const [show, setShow] = useState(false);
-  const [purpose, setPurpose] = useState("");
   const [amount, setAmount] = useState("");
   const [value, setValue] = useState("");
 
   const generateQR = () => {
-    if (purpose.length == 0 || amount.length == 0) return;
+    if (
+      amount.length == 0 ||
+      amount == "0" ||
+      amount.includes("-") ||
+      amount.includes("+")
+    )
+      return;
 
-    const values = { purpose, amount };
-    setValue((prev) => JSON.stringify({ purpose, amount }));
+    const link = `${window.location.origin}/preview?address=${state.address}&amount=${amount}`
+    setValue((prev) => link);
     setShow((prev) => true);
   };
 
@@ -28,7 +31,6 @@ export default function RequestPayment() {
 
   function onCloseFunc() {
     setAmount("");
-    setPurpose("");
     setShow((prev) => false);
     setOpened(false);
   }
@@ -44,23 +46,6 @@ export default function RequestPayment() {
         <p className="text-cGrey text-[22px] font-exo font-bold text-center">
           Receive Payment
         </p>
-
-        <div className="flex flex-col gap-y-1 items-start w-full mt-8">
-          <p className="text-cGrey text-[16px] font-inter text-center">
-            Payment Purpose
-          </p>
-          <TextInput
-            placeholder="Ex: Groceries"
-            type="text"
-            icon={<HiShoppingCart size={16} color="#666" />}
-            className="h-[60px] w-full "
-            size="lg"
-            labelProps={{ color: "#666666" }}
-            required
-            value={purpose}
-            onChange={(e) => onChangeFunc(e, setPurpose)}
-          />
-        </div>
         <div className="flex flex-col gap-y-1 items-start w-full my-8">
           <p className="text-cGreyLit text-[16px] font-inter text-center">
             Amount

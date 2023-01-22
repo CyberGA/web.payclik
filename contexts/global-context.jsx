@@ -7,10 +7,10 @@ import {
   useEffect,
   useReducer,
 } from "react";
-import { providers } from "ethers";
-import { useLocalStorage } from "@mantine/hooks";
+import { ethers, providers } from "ethers";
 import Web3Modal from "web3modal";
-import {initState, StoreReducer, StoreAction } from "@/hooks/store";
+import { initState, StoreReducer, StoreAction } from "@/hooks/store";
+import { useRouter } from "next/router";
 
 const GlobalContext = createContext();
 
@@ -19,12 +19,11 @@ export default function GlobalProvider({ children }) {
   const [opened, setOpened] = useState(false);
   const [success, setSuccess] = useState(false);
   const [state, dispatch] = useReducer(StoreReducer, initState);
-  const [walletConnected, setWalletConnected] = useLocalStorage({
-    key: "isConnected",
-    defaultValue: false,
-  });
+  const [balance, setBalance] = useState("");
 
   const web3ModalRef = useRef();
+
+  const router = useRouter();
 
   const getProviderOrSigner = async (needSigner = false) => {
     // Connect to Metamask
@@ -46,30 +45,60 @@ export default function GlobalProvider({ children }) {
     return web3Provider;
   };
 
-  async function initiate() {
-    if (!walletConnected) {
+  const connectWallet = async () => {
+    try {
+      // Get the provider from web3Modal, which in our case is MetaMask
+      // When used for the first time, it prompts the user to connect their wallet
+      const signer = await getProviderOrSigner(true);
+      const address = await signer.getAddress();
+      dispatch({
+        type: StoreAction.SAVE_ACCOUT,
+        payload: {
+          address,
+        },
+      });
+      setLoading((prev) => false);
+    } catch (err) {
+      console.error(err.message);
+      setLoading((prev) => false);
+    }
+  };
+
+  function refreshWallet() {
+    setLoading((prev) => true);
+    if (!state.walletConnected) {
       // Assign the Web3Modal class to the reference object by setting it's `current` value
       // The `current` value is persisted throughout as long as this page is open
       web3ModalRef.current = new Web3Modal({
         network: "goerli",
         providerOptions: {},
-        cacheProvider: true,
         disableInjectedProvider: false,
       });
-    }
 
-    dispatch({
+      dispatch({
         type: StoreAction.INIT_ACCOUNT,
         payload: {
-          web3ModalRef
+          web3ModalRef: web3ModalRef,
+          walletConnected: true,
         },
       });
-
+      connectWallet();
     }
+  }
+  
+  const getUserBalance = async () => {
+    setBalance((prev) => "");
+    const signer = await getProviderOrSigner(true);
+    const balance = await signer
+      .getBalance()
+      .then((bal) => ethers.utils.formatEther(bal));
+    setBalance(balance.substr(0, 6));
+  };
 
   useEffect(() => {
-    initiate();
-  }, []);
+    setLoading((prev) => true);
+    refreshWallet();
+  }, [state.walletConnected, router.pathname]);
 
   const globalValues = useMemo(() => {
     return {
@@ -79,16 +108,16 @@ export default function GlobalProvider({ children }) {
       setOpened,
       success,
       setSuccess,
-      walletConnected,
-      setWalletConnected,
       getProviderOrSigner,
-      web3ModalRef,
-      initiate,
       state,
+      refreshWallet,
       dispatch,
+      balance,
+      setBalance,
+      getUserBalance,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, opened, success, walletConnected]);
+  }, [loading, opened, success, balance]);
 
   return (
     <GlobalContext.Provider value={globalValues}>
