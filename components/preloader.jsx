@@ -2,6 +2,7 @@ import { LoadingOverlay } from "@mantine/core";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import { useGlobalContext } from "@/contexts/global-context";
+import AppLoader from "./loader";
 
 export default function PreLoader({ children }) {
   const { loading, setLoading } = useGlobalContext();
@@ -33,14 +34,7 @@ export default function PreLoader({ children }) {
 
   return (
     <>
-      <LoadingOverlay
-        visible={loading}
-        overlayBlur={2}
-        loaderProps={{ size: "xl", color: "#6933D5", variant: "bars" }}
-        overlayOpacity={0.8}
-        overlayColor="#000"
-        zIndex="99999"
-      />
+      {loading && <AppLoader />}
       {children}
     </>
   );
