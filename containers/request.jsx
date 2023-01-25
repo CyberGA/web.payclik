@@ -5,7 +5,7 @@ import { useGlobalContext } from "@/contexts/global-context";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useState } from "react";
 export default function RequestPayment() {
-  const { opened, setOpened, state } = useGlobalContext();
+  const { opened, setOpened, address } = useGlobalContext();
   const [show, setShow] = useState(false);
   const [amount, setAmount] = useState("");
   const [value, setValue] = useState("");
@@ -19,9 +19,11 @@ export default function RequestPayment() {
     )
       return;
 
-    const link = `${window.location.origin}/preview?address=${state.address}&amount=${amount}`
-    setValue((prev) => link);
-    setShow((prev) => true);
+    if(address) {
+      const link = `${window.location.origin}/preview?address=${address}&amount=${amount}`;
+      setValue((prev) => link);
+      setShow((prev) => true);
+    }
   };
 
   function onChangeFunc(e, setState) {

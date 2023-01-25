@@ -1,7 +1,6 @@
 
 import RequestPayment from "./request";
 import Menu from "@/components/menu";
-import TransactionsContainer from "./transactions";
 
 export default function DashboardContainer() {
 

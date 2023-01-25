@@ -7,6 +7,11 @@ import {
   useEffect,
   useReducer,
 } from "react";
+import {
+  useAddress,
+  useMetamask,
+  useSDK,
+} from "@thirdweb-dev/react";
 import { ethers, providers } from "ethers";
 import Web3Modal from "web3modal";
 import { initState, StoreReducer, StoreAction } from "@/hooks/store";
@@ -21,6 +26,10 @@ export default function GlobalProvider({ children }) {
   const [success, setSuccess] = useState(false);
   const [state, dispatch] = useReducer(StoreReducer, initState);
   const [balance, setBalance] = useState("");
+
+  const address = useAddress();
+  const connect = useMetamask();
+  const sdk = useSDK();
 
   const web3ModalRef = useRef();
 
@@ -91,17 +100,16 @@ export default function GlobalProvider({ children }) {
 
   const getUserBalance = async () => {
     setBalance((prev) => "");
-    const signer = await getProviderOrSigner(true);
-    const balance = await signer
-      .getBalance()
-      .then((bal) => ethers.utils.formatEther(bal));
-    setBalance(balance.substr(0, 6));
+    const balance = await sdk.wallet.balance();
+    setBalance(balance.displayValue.substring(0, 6));
   };
 
   useEffect(() => {
     let isMounted = true;
     setLoading((prev) => true);
-    refreshWallet();
+    // refreshWallet();
+
+    connect().then(() => setLoading(prev => false))
 
     return () => {
       isMounted = false;
@@ -124,9 +132,11 @@ export default function GlobalProvider({ children }) {
       balance,
       setBalance,
       getUserBalance,
+      connect,
+      address,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, opened, success, balance]);
+  }, [loading, opened, success, balance, address]);
 
   return (
     <GlobalContext.Provider value={globalValues}>

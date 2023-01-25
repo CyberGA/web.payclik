@@ -7,20 +7,23 @@ import { useRouter } from "next/router";
 
 export default function LandingContainer() {
   const router = useRouter();
-  const { setLoading, state } =
+  const { setLoading, address } =
     useGlobalContext();
 
   async function onContine() {
     setLoading((prev) => true);
-    if (state.walletConnected) {
+    if (address) {
       router.push("/app");
+    } else {
+      alert("Please refresh the page and connect wallet")
     }
+      setLoading((prev) => false);
+
   }
   useEffect(() => {
     return () => {
-      setLoading((prev) => false);
     };
-  }, []);
+  }, [address]);
 
   return (
     <div>
