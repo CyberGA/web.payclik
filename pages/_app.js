@@ -3,6 +3,7 @@ import "@/styles/globals.css";
 import HeaderContainer from "@/containers/header";
 import PreLoader from "@/components/preloader";
 import GlobalProvider from "@/contexts/global-context";
+import { ChainId, ThirdwebProvider } from "@thirdweb-dev/react";
 
 export default function App({ Component, pageProps }) {
   return (
@@ -31,14 +32,16 @@ export default function App({ Component, pageProps }) {
         <link rel="manifest" href="/site.webmanifest" crossOrigin="true" />
       </Head>
 
-      <GlobalProvider>
-        <PreLoader>
-          <HeaderContainer />
-          <main>
-            <Component {...pageProps} />
-          </main>
-        </PreLoader>
-      </GlobalProvider>
+      <ThirdwebProvider desiredChainId={ChainId.Goerli}>
+        <GlobalProvider>
+          <PreLoader>
+            <HeaderContainer />
+            <main>
+              <Component {...pageProps} />
+            </main>
+          </PreLoader>
+        </GlobalProvider>
+      </ThirdwebProvider>
     </>
   );
 }
