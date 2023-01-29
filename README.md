@@ -6,11 +6,14 @@ This is a scan to make payment dapp built on the ethereum network.
 - Request for a payment
 - Enter amount of eth
 - Click on "Generate QR Code"
-- Customers can use their mobile device scanner to scan the generated QR code to make eth payment to your address
+- Share or display the generated QR to your client or customer
 - Customer scan QR code
 - Customer can confirm payment or cancel payment
 
-## NOTE - Please ensure you have metamask install, or you can use decentralized browsers like brave, this will ensure the proper working of the application
+## NOTE - Please to use the application easily on mobile devices, use brave browser that has your account setup. For desktop, please install metamask.
+
+
+## NOTE also that this application support payment with ethers and is currently using the Goerli network for testing.
 
 
 You can check out the [PayClick](https://web-payclik.vercel.app/) web app - your feedback and contributions are welcome!
