@@ -20,7 +20,7 @@ export default function RequestPayment() {
       return;
 
     if(address) {
-      const link = `${window.location.origin}/preview?address=${address}&amount=${amount}`;
+      const link = `${window.location.origin}/preview?to=${address}&amount=${amount}`;
       setValue((prev) => link);
       setShow((prev) => true);
     }

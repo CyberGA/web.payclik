@@ -1,7 +1,5 @@
-import { useEffect } from "react";
-import { ethers } from "ethers";
+import { useEffect, useState } from "react";
 import RequestPayment from "./request";
-import Menu from "@/components/menu";
 import { TiShoppingCart } from "react-icons/ti";
 import { BsCheckLg } from "react-icons/bs";
 import PrimaryBtn from "@/components/primaryBtn";
@@ -11,15 +9,17 @@ import shortened from "@/lib/shortend";
 
 function PreviewPaymentContainer() {
   const router = useRouter();
-  const { address, amount } = router.query;
-  const {
-    success,
-    setLoading,
-    getProviderOrSigner,
-    refreshWallet,
-    setSuccess,
-    balance,
-  } = useGlobalContext();
+  const { to, amount } = router.query;
+  const { success, setLoading, setSuccess, getUserBalance, sdk, address } =
+    useGlobalContext();
+  const [balance, setBalance] = useState("");
+
+  const getMyBal = async () => {
+    setLoading((prev) => true);
+    const bal = await getUserBalance();
+    setBalance((prev) => bal);
+    setLoading((prev) => false);
+  };
 
   const confirmPayment = async () => {
     setLoading((prev) => true);
@@ -31,11 +31,8 @@ function PreviewPaymentContainer() {
         return;
       }
 
-      const signer = await getProviderOrSigner(true);
-      await signer.sendTransaction({
-        to: address,
-        value: ethers.utils.parseEther(amount),
-      });
+      await sdk.wallet.transfer(to, amount);
+
       setSuccess((prev) => true);
       setLoading((prev) => false);
     } catch (error) {
@@ -46,16 +43,14 @@ function PreviewPaymentContainer() {
   };
 
   useEffect(() => {
-    refreshWallet();
-    return () => {
-      setSuccess((prev) => false);
-    };
-  }, []);
+    if (address) {
+      getMyBal();
+    }
+  }, [address]);
 
   return (
     <div className="w-full mt-[120px] bg-cWhiteMix h-full min-h-screen px-4 sm:px-10">
       <div className="mx-auto max-w-5xl flex flex-col lg:flex-row gap-8 lg:gap-20 items-center lg:items-start py-8 w-full">
-        <Menu />
         <div className="w-full flex flex-col items-start">
           <div className="flex flex-col items-center gap-6 mt-10 px-5 py-[50px] bg-secondary shadow-lg rounded-lg w-full">
             <div>
@@ -66,7 +61,7 @@ function PreviewPaymentContainer() {
                 You are paying to
               </p>
               <p className="text-white text-center text-[33px] font-inter font-bold">
-                {address && shortened(address)}
+                {to && shortened(to)}
               </p>
             </div>
             <div className="w-[251px] my-[46px]">
