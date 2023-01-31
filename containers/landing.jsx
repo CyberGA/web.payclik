@@ -5,17 +5,21 @@ import { useGlobalContext } from "@/contexts/global-context";
 import Image from "next/image";
 import { useRouter } from "next/router";
 
+
 export default function LandingContainer() {
   const router = useRouter();
-  const { setLoading, address } =
-    useGlobalContext();
+  const { setLoading, address, setAlertMsg, setShowAlert } = useGlobalContext();
 
   async function onContine() {
     setLoading((prev) => true);
     if (address) {
       router.push("/app");
     } else {
-      alert("Please refresh the page and connect wallet")
+      setAlertMsg(
+        (prev) =>
+          "Please connect your wallet or use metamask browser and refresh the page"
+      );
+      setShowAlert((prev) => true);
     }
       setLoading((prev) => false);
 
