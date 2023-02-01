@@ -25,7 +25,7 @@ export default function HeaderContainer() {
       {router.pathname == "/" || router.pathname == "/create-user" ? (
         <></>
       ) : (
-        <nav className="w-full bg-secondary fixed top-0">
+        <nav className="w-full bg-secondary fixed top-0 z-[99]">
           <div className="flex flex-row w-full h-[120px] border-b justify-between px-[6vw]">
             <Brand
               isHome={false}

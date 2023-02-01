@@ -79,3 +79,30 @@ a {
 .dashboard {
   width: calc(60vw + 22rem);
 }
+
+.clip {
+  contain: content;
+}
+
+.pagination {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5rem 0;
+  font-size: 1.2rem;
+  gap: 16px;
+  font-family: 'Exo', sans-serif;;
+}
+
+.pagination .page-num {
+  padding: 8px 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.pagination .page-num:hover, .pagination .active {
+  background-color: #6933D5;
+  color: #fff;
+}
