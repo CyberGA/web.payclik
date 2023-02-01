@@ -5,4 +5,4 @@ export default function Home() {
 }
 
 Home.title = "Welcome | Connect Wallet";
-Home.desd = "Connect to your metamask wallet";
+Home.desc = "Connect to your metamask wallet";
