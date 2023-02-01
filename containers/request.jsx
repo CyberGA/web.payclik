@@ -4,8 +4,11 @@ import QRCode from "react-qr-code";
 import { useGlobalContext } from "@/contexts/global-context";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useState } from "react";
+
+
 export default function RequestPayment() {
-  const { opened, setOpened, address } = useGlobalContext();
+  const { opened, setOpened, address, setAlertMsg, setShowAlert } =
+    useGlobalContext();
   const [show, setShow] = useState(false);
   const [amount, setAmount] = useState("");
   const [value, setValue] = useState("");
@@ -14,12 +17,14 @@ export default function RequestPayment() {
     if (
       amount.length == 0 ||
       amount == "0" ||
-      amount.includes("-") ||
-      amount.includes("+")
-    )
+      amount.includes("-")
+    ) {
+      setAlertMsg((prev) => "Invalid amount");
+      setShowAlert((prev) => true);
       return;
+    }
 
-    if(address) {
+    if (address) {
       const link = `${window.location.origin}/preview?to=${address}&amount=${amount}`;
       setValue((prev) => link);
       setShow((prev) => true);
@@ -38,12 +43,7 @@ export default function RequestPayment() {
   }
 
   return (
-    <Modal
-      opened={opened}
-      onClose={onCloseFunc}
-      size="md"
-      overflow="outside"
-    >
+    <Modal opened={opened} onClose={onCloseFunc} size="md" overflow="outside">
       <div className="pb-20">
         <p className="text-cGrey text-[22px] font-exo font-bold text-center">
           Receive Payment
@@ -53,9 +53,9 @@ export default function RequestPayment() {
             Amount
           </p>
           <TextInput
-            placeholder="0.0145"
+            placeholder="0.0145ETH"
             type="number"
-            icon={<SiEthereum size={16} color="#66" />}
+            icon={<SiEthereum size={16} color="#666" />}
             className="h-[60px] w-full "
             size="lg"
             labelProps={{ color: "#666666" }}

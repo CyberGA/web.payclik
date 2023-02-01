@@ -10,8 +10,16 @@ import shortened from "@/lib/shortend";
 function PreviewPaymentContainer() {
   const router = useRouter();
   const { to, amount } = router.query;
-  const { success, setLoading, setSuccess, getUserBalance, sdk, address } =
-    useGlobalContext();
+  const {
+    success,
+    setLoading,
+    setSuccess,
+    getUserBalance,
+    sdk,
+    address,
+    setAlertMsg,
+    setShowAlert,
+  } = useGlobalContext();
   const [balance, setBalance] = useState("");
 
   const getMyBal = async () => {
@@ -25,7 +33,8 @@ function PreviewPaymentContainer() {
     setLoading((prev) => true);
     try {
       if (balance < amount) {
-        alert("Insufficient balance");
+        setAlertMsg((prev) => "Insufficient balance");
+        setShowAlert((prev) => true);
         setLoading((prev) => false);
 
         return;
@@ -36,8 +45,8 @@ function PreviewPaymentContainer() {
       setSuccess((prev) => true);
       setLoading((prev) => false);
     } catch (error) {
-      console.log(error);
-      alert("Error: " + error.message);
+      setAlertMsg((prev) => `"Error: " + ${error.message}`);
+      setShowAlert((prev) => true);
       setLoading((prev) => false);
     }
   };
