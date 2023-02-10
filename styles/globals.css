@@ -92,7 +92,7 @@ a {
   margin: 5rem 0;
   font-size: 1.2rem;
   gap: 16px;
-  font-family: 'Exo', sans-serif;;
+  font-family: "Exo", sans-serif;
 }
 
 .pagination .page-num {
@@ -102,7 +102,37 @@ a {
   font-weight: 500;
 }
 
-.pagination .page-num:hover, .pagination .active {
-  background-color: #6933D5;
+.pagination .page-num:hover,
+.pagination .active {
+  background-color: #6933d5;
   color: #fff;
 }
+
+button.connect {
+  background-color: #6933d5;
+  color: #fff;
+  border: 2px solid #fff;
+  transition: 0.5s;
+  font-weight: bold;
+}
+
+button.connect:hover {
+  background-color: #fff;
+  color: #6933d5;
+  border: 2px solid #fff;
+  font-weight: bold;
+}
+.css-55ygxk:focus:after, .css-1bnwz7w:focus:after {
+  border: none !important;
+}
+
+.MuiTab-textColorPrimary.Mui-selected {
+  color: #6933d5 !important;
+  font-family: "Exo", sans-serif;
+  font-weight: 700;
+}
+
+.MuiTab-textColorPrimary {
+  font-family: "Exo", sans-serif;
+}
+

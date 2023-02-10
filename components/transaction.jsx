@@ -1,6 +1,10 @@
+import { timeStampToDate } from "@/lib/date";
+import { getTimeStamp } from "@/lib/getTransactions";
 import shortened from "@/lib/shortend";
 
 export default function Transaction({ address, amount }) {
+
+  
   return (
     <div className="flex flex-col border-b pb-2 ">
       <div className="flex flex-row justify-between">
@@ -10,7 +14,7 @@ export default function Transaction({ address, amount }) {
         </p>
         <p className="text-[14px]">{amount && amount}</p>
       </div>
-      {/* <p>12 June 2022 at 03:00 pm</p> */}
+      {/* <p>{time}</p> */}
     </div>
   );
 }

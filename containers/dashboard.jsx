@@ -1,7 +1,8 @@
-
 import RequestPayment from "./request";
 import Menu from "@/components/menu";
 import TransactionsContainer from "./transactions";
+import { VscChromeClose } from "react-icons/vsc";
+import PaymentResult from "./paymentResult";
 
 export default function DashboardContainer() {
 
@@ -12,6 +13,7 @@ export default function DashboardContainer() {
         <TransactionsContainer />
 
         <RequestPayment />
+        <PaymentResult />
       </div>
     </div>
   );

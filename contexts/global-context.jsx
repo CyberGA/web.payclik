@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { useAddress, useMetamask, useSDK } from "@thirdweb-dev/react";
+import { useAddress } from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import ErrorSnackbar from "@/components/error-snackbar";
 
@@ -9,17 +9,14 @@ export default function GlobalProvider({ children }) {
   const [loading, setLoading] = useState(false);
   const [opened, setOpened] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [showAlert, setShowAlert] = useState(false)
+  const [showAlert, setShowAlert] = useState(false);
   const [alertMsg, setAlertMsg] = useState("");
-  const [walletConnected, setWalletConnected] = useState(false);
 
   const address = useAddress();
-  const connect = useMetamask();
-  const sdk = useSDK();
 
   const router = useRouter();
 
-  const connectWallet = async () => {
+  async function checkForAWallet() {
     if (window.ethereum === undefined) {
       console.error("No ethereum object found");
 
@@ -27,57 +24,34 @@ export default function GlobalProvider({ children }) {
         (prev) =>
           "No Ethereum provider found! Please install a wallet extension like MetaMask or use brave browser and setup a wallet"
       );
-      setShowAlert(prev => true)
+      setShowAlert((prev) => true);
       router.pathname !== "/" && router.push("/");
       return null;
     }
-    setLoading((prev) => true);
 
-    try {
-      const connectData = await connect();
-
-      if (connectData.data) {
-        setWalletConnected((prev) => true);
+    if (!address) {
+      if (router.pathname == "/" || router.pathname.startsWith("/preview")) {
+        return;
       }
-
-      const chainID = connectData.data.chain.id;
-
-      if (chainID !== 5) {
-        setAlertMsg((prev) => "Please change to Goerli network and refresh");
-        setShowAlert((prev) => true);
-      }
-
-      setLoading((prev) => false);
-    } catch (err) {
-      console.error(err.message);
-      setAlertMsg((prev) => `Error: ${err.message}`);
+      setAlertMsg((prev) => "Please connect your wallet");
       setShowAlert((prev) => true);
-      setLoading((prev) => false);
+      router.pathname !== "/" &&
+        !router.pathname.startsWith("/preview") &&
+        router.push("/");
+      return null;
     }
-  };
-
-  const getUserBalance = async () => {
-    if(address) {
-      const userBalance = await sdk?.getBalance(address);
-      return userBalance?.displayValue.substring(0, 6);
-    }
-  };
-
-  async function init() {
-    await connectWallet();
-    await getUserBalance();
   }
 
   useEffect(() => {
     let isMounted = true;
 
-    init();
+    checkForAWallet();
 
     return () => {
       isMounted = false;
       setLoading((prev) => false);
     };
-  }, [router.pathname, walletConnected]);
+  }, [router.pathname]);
 
   const globalValues = useMemo(() => {
     return {
@@ -87,17 +61,14 @@ export default function GlobalProvider({ children }) {
       setOpened,
       success,
       setSuccess,
-      connect,
       address,
-      getUserBalance,
-      sdk,
       showAlert,
       setShowAlert,
       alertMsg,
       setAlertMsg,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading, opened, success, address, walletConnected, showAlert, alertMsg]);
+  }, [loading, opened, success, address, showAlert, alertMsg]);
 
   return (
     <GlobalContext.Provider value={globalValues}>

@@ -1,11 +1,14 @@
 
 
 import PreviewPaymentContainer from '@/containers/preview'
+import PaymentProvider from '@/contexts/payment'
 
 export default function PreviewPayment() {
   return (
-    <PreviewPaymentContainer />
-  )
+    <PaymentProvider>
+      <PreviewPaymentContainer />
+    </PaymentProvider>
+  );
 }
 
 PreviewPayment.title = "Preview Payment | PayClik"
