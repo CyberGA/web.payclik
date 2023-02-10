@@ -4,10 +4,12 @@ import QRCode from "react-qr-code";
 import { useGlobalContext } from "@/contexts/global-context";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useState } from "react";
+import { useAddress } from "@thirdweb-dev/react";
 
 
 export default function RequestPayment() {
-  const { opened, setOpened, address, setAlertMsg, setShowAlert } =
+  const address = useAddress()
+  const { opened, setOpened, setAlertMsg, setShowAlert } =
     useGlobalContext();
   const [show, setShow] = useState(false);
   const [amount, setAmount] = useState("");

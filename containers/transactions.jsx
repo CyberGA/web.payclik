@@ -1,5 +1,3 @@
-import Transaction from "@/components/transaction";
-import { useGlobalContext } from "@/contexts/global-context";
 import {
   getSentTransactions,
   getReceiveTransactions,
@@ -16,6 +14,8 @@ import Box from "@material-ui/core/Box";
 import PaidTo from "@/components/sent-transactions";
 import PaidFrom from "@/components/received-transactions";
 import { Skeleton } from "@mantine/core";
+import { useAddress } from "@thirdweb-dev/react";
+import { TbRefresh } from "react-icons/tb";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -64,7 +64,7 @@ export default function TransactionsContainer() {
 
   const [paidTo, setPaidTo] = useState([]);
   const [paidFrom, setPaidFrom] = useState([]);
-  const { address } = useGlobalContext();
+  const address = useAddress();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -74,22 +74,35 @@ export default function TransactionsContainer() {
     setValue(index);
   };
 
+  function getHistory() {
+    setPaidTo([]);
+    setPaidFrom([]);
+
+    getSentTransactions(address).then((res) => {
+      setPaidTo(res.transfers.reverse());
+    });
+    getReceiveTransactions(address).then((res) => {
+      setPaidFrom(res.transfers.reverse());
+    });
+  }
+
   useEffect(() => {
     if (address) {
-      getSentTransactions(address).then((res) => {
-        setPaidTo(res.transfers);
-      });
-      getReceiveTransactions(address).then((res) => {
-        setPaidFrom(res.transfers);
-      });
+      getHistory();
     }
   }, [address]);
 
   return (
     <div className="w-full flex flex-col items-start">
       <div className="flex flex-col mt-10 bg-white shadow-lg rounded-lg w-full clip">
-        <p className="text-[22px] font-exo font-bold p-5 text-white bg-secondary">
+        <p
+          className="text-[22px] font-exo font-bold p-5 text-white bg-secondary flex items-center justify-between cursor-pointer"
+          onClick={getHistory}
+        >
           Transactions
+          <span>
+            <TbRefresh size={28} />
+          </span>
         </p>
         <div className={classes.root}>
           <AppBar
@@ -106,8 +119,8 @@ export default function TransactionsContainer() {
               variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="PAID TO" {...a11yProps(0)} />
-              <Tab label="PAID FROM" {...a11yProps(1)} />
+              <Tab label="SENT TO" {...a11yProps(0)} />
+              <Tab label="RECEIVED FROM" {...a11yProps(1)} />
             </Tabs>
           </AppBar>
           <SwipeableViews
@@ -121,7 +134,7 @@ export default function TransactionsContainer() {
               </Skeleton>
             </TabPanel>
             <TabPanel value={value} index={1} dir={theme.direction}>
-              <Skeleton visible={paidFrom?.length == 0}>
+              <Skeleton visible={paidFrom?.length == 0} >
                 <PaidFrom data={paidFrom} />
               </Skeleton>
             </TabPanel>

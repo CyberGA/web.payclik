@@ -1,39 +1,32 @@
-import { useEffect } from "react";
 import Brand from "@/components/brand";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useGlobalContext } from "@/contexts/global-context";
 import Image from "next/image";
 import { useRouter } from "next/router";
-
+import { ConnectWallet, useAddress } from "@thirdweb-dev/react";
 
 export default function LandingContainer() {
   const router = useRouter();
-  const { setLoading, address, setAlertMsg, setShowAlert } = useGlobalContext();
+  const address = useAddress();
+  const { setAlertMsg, setShowAlert } = useGlobalContext();
 
   async function onContine() {
-    setLoading((prev) => true);
     if (address) {
       router.push("/app");
     } else {
-      setAlertMsg(
-        (prev) =>
-          "Please connect your wallet or use metamask browser and refresh the page"
-      );
+      setAlertMsg((prev) => "Please connect your wallet");
       setShowAlert((prev) => true);
     }
-      setLoading((prev) => false);
-
   }
-  useEffect(() => {
-    return () => {
-    };
-  }, [address]);
 
   return (
     <div>
       <Brand />
       <div className="flex justify-center items-center h-full w-full px-8">
         <div className="flex flex-col lg:flex-row gap-12 items-center mb-20">
+          <div className="block sm:hidden">
+            <ConnectWallet className="connect" />
+          </div>
           <Image
             src="/assets/scan.gif"
             width={500}
