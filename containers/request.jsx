@@ -7,21 +7,15 @@ import { useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
 import { CopyButton, Button } from "@mantine/core";
 
-
 export default function RequestPayment() {
-  const address = useAddress()
-  const { opened, setOpened, setAlertMsg, setShowAlert } =
-    useGlobalContext();
+  const address = useAddress();
+  const { opened, setOpened, setAlertMsg, setShowAlert } = useGlobalContext();
   const [show, setShow] = useState(false);
   const [amount, setAmount] = useState("");
   const [value, setValue] = useState("");
 
   const generateQR = () => {
-    if (
-      amount.length == 0 ||
-      amount == "0" ||
-      amount.includes("-")
-    ) {
+    if (amount.length == 0 || amount == "0" || amount.includes("-")) {
       setAlertMsg((prev) => "Invalid amount");
       setShowAlert((prev) => true);
       return;
@@ -70,29 +64,30 @@ export default function RequestPayment() {
         <PrimaryBtn text="Generate QR Code" onClick={generateQR} />
 
         {show ? (
-          <div className="flex justify-center items-center border px-4 py-10 mt-9">
-            <QRCode
-              size={50}
-              style={{ height: "auto", maxWidth: "200px", width: "100%" }}
-              value={value}
-              viewBox={`0 0 50 50`}
-            />
-          </div>
+          <>
+            <div className="flex justify-center items-center border px-4 py-10 mt-9">
+              <QRCode
+                size={50}
+                style={{ height: "auto", maxWidth: "200px", width: "100%" }}
+                value={value}
+                viewBox={`0 0 50 50`}
+              />
+            </div>
+            <div className="flex justify-center items-center pt-10">
+              <div className="bg-[#1A1B1E] rounded">
+                <CopyButton value={value} timeout={2500}>
+                  {({ copied, copy }) => (
+                    <Button color="dark" onClick={copy}>
+                      {copied ? "Copied payment url" : "Copy url"}
+                    </Button>
+                  )}
+                </CopyButton>
+              </div>
+            </div>
+          </>
         ) : (
           <></>
         )}
-
-        <div className="flex justify-center items-center pt-10">
-          <div className="bg-[#1A1B1E] rounded">
-            <CopyButton value={value} timeout={2500}>
-              {({ copied, copy }) => (
-                <Button color="dark" onClick={copy}>
-                  {copied ? "Copied payment url" : "Copy url"}
-                </Button>
-              )}
-            </CopyButton>
-          </div>
-        </div>
       </div>
     </Modal>
   );
