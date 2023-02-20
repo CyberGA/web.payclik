@@ -1,5 +1,10 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { useAddress } from "@thirdweb-dev/react";
+import {
+  ChainId,
+  useAddress,
+  useNetwork,
+  useNetworkMismatch,
+} from "@thirdweb-dev/react";
 import { useRouter } from "next/router";
 import ErrorSnackbar from "@/components/error-snackbar";
 
@@ -13,22 +18,12 @@ export default function GlobalProvider({ children }) {
   const [alertMsg, setAlertMsg] = useState("");
 
   const address = useAddress();
+  const isMismatched = useNetworkMismatch();
+  const [, switchNetwork] = useNetwork();
 
   const router = useRouter();
 
   async function checkForAWallet() {
-    if (window.ethereum === undefined) {
-      console.error("No ethereum object found");
-
-      setAlertMsg(
-        (prev) =>
-          "No Ethereum provider found! Please install a wallet extension like MetaMask or use brave browser and setup a wallet"
-      );
-      setShowAlert((prev) => true);
-      router.pathname !== "/" && router.push("/");
-      return null;
-    }
-
     if (!address) {
       if (router.pathname == "/" || router.pathname.startsWith("/preview")) {
         return;
@@ -42,6 +37,12 @@ export default function GlobalProvider({ children }) {
     }
   }
 
+  function changeNetwork() {
+    if (isMismatched) {
+      switchNetwork(ChainId.Goerli);
+    }
+  }
+
   useEffect(() => {
     let isMounted = true;
 
@@ -52,6 +53,10 @@ export default function GlobalProvider({ children }) {
       setLoading((prev) => false);
     };
   }, [router.pathname]);
+
+  useEffect(() => {
+    changeNetwork();
+  }, [address]);
 
   const globalValues = useMemo(() => {
     return {
