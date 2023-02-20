@@ -2,16 +2,18 @@
 
 ### This is a scan to make payment dapp built on the ethereum network.
 
+> # [PAYCLIK CONTRACT CODE](https://github.com/CyberGA/payclik-contract)
+
 ## How it works
 
 - Connect Wallet
-- <img src="https://github.com/CyberGA/allassets/blob/master/connectWallet.png?raw=true" width="800">
+<img src="https://github.com/CyberGA/allassets/blob/master/connectWallet.png?raw=true" width="500">
 
 
 - Request for a payment
 - Enter amount of eth
 - Click on "Generate QR Code"
-- <img src="https://github.com/CyberGA/allassets/blob/master/request.png?raw=true" width="800">
+- <img src="https://github.com/CyberGA/allassets/blob/master/request.png?raw=true" width="500">
 
 
 - Share or display the generated QR to your client or customer
@@ -21,6 +23,9 @@
 - Customer can confirm payment or cancel payment
 - <img src="https://github.com/CyberGA/allassets/blob/master/preview.png?raw=true" height="500">
 - <img src="https://github.com/CyberGA/allassets/blob/master/success.png?raw=true" height="500">
+
+- Once payment is successful, vendor or recipient gets a notification.
+- <img src="https://github.com/CyberGA/allassets/blob/master/vendor_confirmation.png?raw=true" height="500">
 
 ## NOTE - Please to use the application easily on mobile devices, use brave browser that has your account setup. For desktop, please install metamask.
 
