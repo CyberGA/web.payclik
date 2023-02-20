@@ -16,8 +16,8 @@
 - <img src="https://github.com/CyberGA/allassets/blob/master/request.png?raw=true" width="500">
 
 
-- Share or display the generated QR to your client or customer
-- Customer scan QR code
+- Share or display the generated QR to your client or customer or copy the payment url and send to client
+- Customer scan QR code or click on the payment url sent
 - <img src="https://github.com/CyberGA/allassets/blob/master/scan.png?raw=true" height="500">
 
 - Customer can confirm payment or cancel payment
