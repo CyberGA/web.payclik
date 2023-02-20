@@ -5,6 +5,7 @@ import { useGlobalContext } from "@/contexts/global-context";
 import PrimaryBtn from "@/components/primaryBtn";
 import { useState } from "react";
 import { useAddress } from "@thirdweb-dev/react";
+import { CopyButton, Button } from "@mantine/core";
 
 
 export default function RequestPayment() {
@@ -80,6 +81,18 @@ export default function RequestPayment() {
         ) : (
           <></>
         )}
+
+        <div className="flex justify-center items-center pt-10">
+          <div className="bg-[#1A1B1E] rounded">
+            <CopyButton value={value} timeout={2500}>
+              {({ copied, copy }) => (
+                <Button color="dark" onClick={copy}>
+                  {copied ? "Copied payment url" : "Copy url"}
+                </Button>
+              )}
+            </CopyButton>
+          </div>
+        </div>
       </div>
     </Modal>
   );
